@@ -14,6 +14,26 @@ public class Person
 
     public Person(string firstName, string lastName, int age, decimal salary)
     {
+        if (firstName.Length < 3)
+        {
+            throw new ArgumentException("First name cannot contain fewer than 3 symbols!");
+        }
+
+        if (lastName.Length < 3)
+        {
+            throw new ArgumentException("Last name cannot contain fewer than 3 symbols!");
+        }
+
+        if (age <= 0)
+        {
+            throw new ArgumentException("Age cannot be zero or a negative integer!");
+        }
+
+        if (salary < 460)
+        {
+            throw new ArgumentException("Salary cannot be less than 460 dollars!");
+        }
+
         this.firstName = firstName;
         this.lastName = lastName;
         this.age = age;
@@ -22,7 +42,7 @@ public class Person
 
     public override string ToString()
     {
-        return $"{firstName} {lastName} receives {salary:0.00} dollars.";
+        return $"{firstName} {lastName} gets {salary:0.00} dollars.";
     }
 
     public void IncreaseSalary(decimal percentage)
