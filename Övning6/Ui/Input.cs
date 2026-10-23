@@ -47,7 +47,7 @@ public static class Input
         }
     }
 
-    public static T PromptOptions<T>(params T[] options)
+    public static T PromptOptions<T>(params List<T> options)
         where T : notnull
     {
         var result = default(T);
@@ -58,7 +58,7 @@ public static class Input
             actions.Add(new MenuAction(option.ToString(), () => result = option));
         }
 
-        var menu = new Menu([.. actions]);
+        var menu = new Menu(actions);
         menu.Run();
 
         return result!;

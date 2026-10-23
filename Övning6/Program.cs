@@ -35,12 +35,12 @@ internal static class Program
 
     private static void ListVehicles()
     {
-        ShowListOfVehicles([.. _garage.Vehicles]);
+        ShowListOfVehicles(_garage.Vehicles);
     }
 
     private static void CountByType()
     {
-        if (_garage.Vehicles.Length == 0)
+        if (_garage.Vehicles.Count == 0)
         {
             Console.WriteLine("<empty>");
             return;
@@ -69,7 +69,7 @@ internal static class Program
     private static void AddNewVehicle()
     {
         Console.WriteLine("Pick the vehicle's color:");
-        var color = Input.PromptOptions(Enum.GetValues<Color>());
+        var color = Input.PromptOptions([.. Enum.GetValues<Color>()]);
         var registrationNumber =
             Input.PromptVehicleNumber("Enter the vehicle's registration number");
 
@@ -120,7 +120,7 @@ internal static class Program
 
     private static void RemoveVehicle()
     {
-        if (_garage.Vehicles.Length == 0)
+        if (_garage.Vehicles.Count == 0)
         {
             Console.WriteLine("The garage is empty!");
         }
@@ -138,7 +138,7 @@ internal static class Program
 
         actions.Add(new MenuAction("Cancel", () => { }));
 
-        var menu = new Menu([.. actions]);
+        var menu = new Menu(actions);
         Console.WriteLine("Choose a vehicle to remove:");
         menu.Run();
     }
@@ -149,7 +149,7 @@ internal static class Program
         var menu = new Menu(new MenuAction("Color", () =>
             {
                 Console.WriteLine("Choose a color to search for:");
-                var color = Input.PromptOptions(Enum.GetValues<Color>());
+                var color = Input.PromptOptions([.. Enum.GetValues<Color>()]);
                 filters.Add(new ColorFilter(color));
             }),
             new MenuAction("Number of wheels", () =>
@@ -221,9 +221,9 @@ internal static class Program
         }
     }
 
-    private static void ShowListOfVehicles(Vehicle[] vehicles)
+    private static void ShowListOfVehicles(IReadOnlyCollection<Vehicle> vehicles)
     {
-        if (vehicles.Length == 0)
+        if (vehicles.Count == 0)
         {
             Console.WriteLine("<no vehicles>");
             return;
@@ -238,13 +238,19 @@ internal static class Program
     private static void FindByRegistrationNumber()
     {
         var number = Input.PromptVehicleNumber("Enter the number to search for");
-        var vehicle = Array.Find(_garage.Vehicles, v => v.RegistrationNumber == number);
 
-        if (vehicle is not null)
+        var found = false;
+        foreach (var vehicle in _garage.Vehicles)
         {
-            Console.WriteLine(vehicle);
+            if (vehicle.RegistrationNumber == number)
+            {
+                Console.WriteLine(vehicle);
+                found = true;
+                break;
+            }
         }
-        else
+
+        if (!found)
         {
             Console.WriteLine("Not found");
         }
@@ -252,7 +258,7 @@ internal static class Program
 
     private static void FillWithDefaultVehicles()
     {
-        Vehicle[] vehicles =
+        List<Vehicle> vehicles =
         [
             new Car(new VehicleNumber("ABC123"), Color.Red, 120),
             new Car(new VehicleNumber("DEF45X"), Color.Blue, 200),

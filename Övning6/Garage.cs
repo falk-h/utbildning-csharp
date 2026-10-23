@@ -4,14 +4,13 @@ namespace Övning6;
 
 public class Garage
 {
-    private Vehicle[] _vehicles;
+    private readonly List<Vehicle> _vehicles = [];
     private int _spaceLeft;
 
-    public Vehicle[] Vehicles => (Vehicle[])_vehicles.Clone();
+    public IReadOnlyList<Vehicle> Vehicles => _vehicles;
 
     public Garage(int size)
     {
-        _vehicles = [];
         _spaceLeft = size;
     }
 
@@ -22,19 +21,18 @@ public class Garage
             throw new GarageIsFullException();
         }
 
-        if (!Array.TrueForAll(_vehicles, v => v.RegistrationNumber != vehicle.RegistrationNumber))
+        if (_vehicles.Exists(v => v.RegistrationNumber == vehicle.RegistrationNumber))
         {
             throw new RegistrationNumberNotUniqueException(vehicle.RegistrationNumber);
         }
 
         _spaceLeft -= vehicle.Size;
-        _vehicles = [.. _vehicles, vehicle];
+        _vehicles.Add(vehicle);
     }
 
     public void RemoveVehicle(Vehicle vehicle)
     {
-        var i = Array.FindIndex(_vehicles, v => v.RegistrationNumber == vehicle.RegistrationNumber);
-        _vehicles = [.. _vehicles[..i], .. _vehicles[(i + 1)..]];
+        _vehicles.RemoveAll(v => v.RegistrationNumber == vehicle.RegistrationNumber);
     }
 }
 
