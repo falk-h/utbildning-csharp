@@ -98,7 +98,7 @@ internal static class Program
             new MenuAction("Boat", () =>
             {
                 var cylinderVolumeCc = Input.PromptInt("Enter cylinder volume (cm³)");
-                vehicle = new Motorcycle(registrationNumber, color, cylinderVolumeCc);
+                vehicle = new Boat(registrationNumber, color, cylinderVolumeCc);
             })
         );
         menu.Run();
