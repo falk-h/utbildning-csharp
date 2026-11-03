@@ -1,20 +1,20 @@
+using System.Collections;
 using Övning9.Vehicles;
 
 namespace Övning9;
 
-public class Garage
+public class Garage<T> : IEnumerable<T>
+    where T : Vehicle
 {
-    private readonly List<Vehicle> _vehicles = [];
+    private readonly List<T> _vehicles = [];
     private int _spaceLeft;
-
-    public IReadOnlyList<Vehicle> Vehicles => _vehicles;
 
     public Garage(int size)
     {
         _spaceLeft = size;
     }
 
-    public void AddVehicle(Vehicle vehicle)
+    public void AddVehicle(T vehicle)
     {
         if (_spaceLeft < vehicle.Size)
         {
@@ -30,10 +30,16 @@ public class Garage
         _vehicles.Add(vehicle);
     }
 
-    public void RemoveVehicle(Vehicle vehicle)
+    public void RemoveVehicle(T vehicle)
     {
-        _vehicles.RemoveAll(v => v.RegistrationNumber == vehicle.RegistrationNumber);
+        if (!_vehicles.Contains(vehicle)) return;
+        
+        _spaceLeft += vehicle.Size;
+        _vehicles.Remove(vehicle);
     }
+
+    public IEnumerator<T> GetEnumerator() => _vehicles.GetEnumerator();
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
 
 public class GarageIsFullException() : Exception("Garage is full!");

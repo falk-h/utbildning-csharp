@@ -5,7 +5,7 @@ namespace Övning9;
 
 internal static class Program
 {
-    private static Garage _garage = new(40);
+    private static Garage<Vehicle> _garage = new(40);
 
     public static void Main()
     {
@@ -35,19 +35,28 @@ internal static class Program
 
     private static void ListVehicles()
     {
-        ShowListOfVehicles(_garage.Vehicles);
+        if (!_garage.Any())
+        {
+            Console.WriteLine("<no vehicles>");
+            return;
+        }
+
+        foreach (var v in _garage)
+        {
+            Console.WriteLine(v);
+        }
     }
 
     private static void CountByType()
     {
-        if (_garage.Vehicles.Count == 0)
+        if (!_garage.Any())
         {
             Console.WriteLine("<empty>");
             return;
         }
 
         var counts = new SortedDictionary<string, int>();
-        foreach (var v in _garage.Vehicles)
+        foreach (var v in _garage)
         {
             var count = counts.GetValueOrDefault(v.Name);
             counts[v.Name] = count + 1;
@@ -62,7 +71,7 @@ internal static class Program
     private static void CreateNewGarage()
     {
         var size = Input.PromptInt("Enter the size of the garage");
-        _garage = new Garage(size);
+        _garage = new Garage<Vehicle>(size);
         Console.WriteLine("Done!");
     }
 
@@ -120,14 +129,14 @@ internal static class Program
 
     private static void RemoveVehicle()
     {
-        if (_garage.Vehicles.Count == 0)
+        if (!_garage.Any())
         {
             Console.WriteLine("The garage is empty!");
         }
 
         var actions = new List<MenuAction>();
         // ReSharper disable once LoopCanBeConvertedToQuery
-        foreach (var vehicle in _garage.Vehicles)
+        foreach (var vehicle in _garage)
         {
             actions.Add(new MenuAction(vehicle.ToString(), () =>
             {
@@ -198,7 +207,7 @@ internal static class Program
             Console.WriteLine(":");
 
             var foundAny = false;
-            foreach (var vehicle in _garage.Vehicles)
+            foreach (var vehicle in _garage)
             {
                 if (filters.TrueForAll(f => f.Matches(vehicle)))
                 {
@@ -221,26 +230,12 @@ internal static class Program
         }
     }
 
-    private static void ShowListOfVehicles(IReadOnlyCollection<Vehicle> vehicles)
-    {
-        if (vehicles.Count == 0)
-        {
-            Console.WriteLine("<no vehicles>");
-            return;
-        }
-
-        foreach (var v in vehicles)
-        {
-            Console.WriteLine(v);
-        }
-    }
-
     private static void FindByRegistrationNumber()
     {
         var number = Input.PromptVehicleNumber("Enter the number to search for");
 
         var found = false;
-        foreach (var vehicle in _garage.Vehicles)
+        foreach (var vehicle in _garage)
         {
             if (vehicle.RegistrationNumber == number)
             {
