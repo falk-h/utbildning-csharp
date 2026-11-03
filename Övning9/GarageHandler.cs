@@ -2,38 +2,36 @@ using Övning9.Vehicles;
 
 namespace Övning9;
 
-public class GarageHandler(int garageSize)
+public class GarageHandler(IGarage<Vehicle> garage) : IGarageHandler
 {
-    private Garage<Vehicle> _garage = new(garageSize);
-
     public void ReplaceGarage(int newGarageSize)
     {
-        _garage = new Garage<Vehicle>(newGarageSize);
+        garage.Reset(newGarageSize);
     }
 
-    public bool IsEmpty() => !_garage.Any();
+    public bool IsEmpty() => !garage.Any();
 
     public IEnumerable<KeyValuePair<string, int>> CountByType() =>
-        _garage.CountBy(v => v.Name);
+        garage.CountBy(v => v.Name);
 
     // TODO: How to handle exceptions / error messages here?
     public void AddVehicle(Vehicle vehicle)
     {
-        _garage.AddVehicle(vehicle);
+        garage.AddVehicle(vehicle);
     }
 
     public void RemoveVehicle(Vehicle vehicle)
     {
-        _garage.RemoveVehicle(vehicle);
+        garage.RemoveVehicle(vehicle);
     }
 
-    public IEnumerable<Vehicle> GetAllVehicles() => _garage;
+    public IEnumerable<Vehicle> GetAllVehicles() => garage;
 
     public IEnumerable<Vehicle> FindWithFilters(IReadOnlyCollection<SearchFilter> filters) =>
-        _garage.Where(v => filters.All(f => f.Matches(v)));
+        garage.Where(v => filters.All(f => f.Matches(v)));
 
     public Vehicle? FindByRegistrationNumber(VehicleNumber registrationNumber) =>
-        _garage.FirstOrDefault(v => v.RegistrationNumber == registrationNumber);
+        garage.FirstOrDefault(v => v.RegistrationNumber == registrationNumber);
 
     public void FillWithDefaultVehicles()
     {
@@ -52,7 +50,7 @@ public class GarageHandler(int garageSize)
         {
             try
             {
-                _garage.AddVehicle(vehicle);
+                garage.AddVehicle(vehicle);
             }
             catch (GarageIsFullException)
             {

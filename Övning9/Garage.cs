@@ -3,14 +3,21 @@ using Övning9.Vehicles;
 
 namespace Övning9;
 
-public class Garage<T> : IEnumerable<T>
-    where T : Vehicle
+public class Garage<T> : IGarage<T> where T : Vehicle
 {
     private readonly List<T> _vehicles = [];
     private int _spaceLeft;
 
     public Garage(int size)
     {
+        Reset(size);
+    }
+
+    public void Reset(int size)
+    {
+        ArgumentOutOfRangeException.ThrowIfNegativeOrZero(size);
+        
+        _vehicles.Clear();
         _spaceLeft = size;
     }
 

@@ -2,7 +2,7 @@ using Övning9.Vehicles;
 
 namespace Övning9.Io;
 
-public class Ui(GarageHandler garageHandler, TextReader input, TextWriter output)
+public class Ui(IGarageHandler garageHandler, TextReader input, TextWriter output)
 {
     private readonly InputReader _inputReader = new(input, output);
 
