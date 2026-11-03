@@ -6,5 +6,6 @@
   <Project Path="Övning6/Övning6.csproj" />
   <Project Path="Övning7/Övning7.csproj" />
   <Project Path="Övning8/Övning8.csproj" />
+  <Project Path="Övning9.Tests/Övning9.Tests.csproj" />
   <Project Path="Övning9/Övning9.csproj" />
 </Solution>
