@@ -70,7 +70,7 @@ public class Ui(GarageHandler garageHandler, TextReader input, TextWriter output
 
     private void CreateNewGarage()
     {
-        var size = _inputReader.PromptInt("Enter the size of the garage");
+        var size = _inputReader.PromptPositiveInt("Enter the size of the garage");
         garageHandler.ReplaceGarage(size);
         output.WriteLine("Done!");
     }
@@ -88,27 +88,27 @@ public class Ui(GarageHandler garageHandler, TextReader input, TextWriter output
             output,
             new MenuAction("Car", () =>
             {
-                var horsepower = _inputReader.PromptInt("Enter horsepower");
+                var horsepower = _inputReader.PromptPositiveInt("Enter horsepower");
                 vehicle = new Car(registrationNumber, color, horsepower);
             }),
             new MenuAction("Motorcycle", () =>
             {
-                var lengthCm = _inputReader.PromptInt("Enter length (cm)");
+                var lengthCm = _inputReader.PromptPositiveInt("Enter length (cm)");
                 vehicle = new Motorcycle(registrationNumber, color, lengthCm);
             }),
             new MenuAction("Airplane", () =>
             {
-                var numberOfEngines = _inputReader.PromptInt("Enter number of engines");
+                var numberOfEngines = _inputReader.PromptPositiveInt("Enter number of engines");
                 vehicle = new Airplane(registrationNumber, color, numberOfEngines);
             }),
             new MenuAction("Bus", () =>
             {
-                var numberOfSeats = _inputReader.PromptInt("Enter number of seats");
+                var numberOfSeats = _inputReader.PromptPositiveInt("Enter number of seats");
                 vehicle = new Bus(registrationNumber, color, numberOfSeats);
             }),
             new MenuAction("Boat", () =>
             {
-                var cylinderVolumeCc = _inputReader.PromptInt("Enter cylinder volume (cm³)");
+                var cylinderVolumeCc = _inputReader.PromptPositiveInt("Enter cylinder volume (cm³)");
                 vehicle = new Boat(registrationNumber, color, cylinderVolumeCc);
             })
         );
@@ -170,7 +170,7 @@ public class Ui(GarageHandler garageHandler, TextReader input, TextWriter output
             new MenuAction("Number of wheels", () =>
             {
                 var numberOfWheels =
-                    _inputReader.PromptInt("Enter the number of wheels to search for");
+                    _inputReader.PromptPositiveInt("Enter the number of wheels to search for");
                 filters.Add(new NumberOfWheelsFilter(numberOfWheels));
             }),
             new MenuAction("Vehicle type", () =>

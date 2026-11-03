@@ -17,7 +17,7 @@ public class InputReader(TextReader input, TextWriter output)
         }
     }
 
-    public int PromptInt(string prompt, string errorMessage = "Enter an integer!")
+    public int PromptPositiveInt(string prompt, string errorMessage = "Enter a positive integer!")
     {
         while (true)
         {
