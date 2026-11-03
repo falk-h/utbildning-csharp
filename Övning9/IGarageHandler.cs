@@ -12,4 +12,6 @@ public interface IGarageHandler
     IEnumerable<Vehicle> GetAllVehicles();
     IEnumerable<Vehicle> FindWithFilters(IReadOnlyCollection<SearchFilter> filters);
     Vehicle? FindByRegistrationNumber(VehicleNumber registrationNumber);
+    public void SaveToDisk(string file);
+    public void LoadFromDisk(string file);
 }

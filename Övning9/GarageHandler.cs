@@ -31,4 +31,17 @@ public class GarageHandler(IGarage<Vehicle> garage) : IGarageHandler
 
     public Vehicle? FindByRegistrationNumber(VehicleNumber registrationNumber) =>
         garage.FirstOrDefault(v => v.RegistrationNumber == registrationNumber);
+
+    public void SaveToDisk(string file)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(file);
+        File.WriteAllText(file, garage.Serialize());
+        Console.WriteLine(File.ReadAllText(file));
+    }
+
+    public void LoadFromDisk(string file)
+    {
+        ArgumentException.ThrowIfNullOrWhiteSpace(file);
+        garage.Deserialize(File.ReadAllText(file));
+    }
 }

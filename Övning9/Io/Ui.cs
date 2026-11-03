@@ -22,6 +22,8 @@ public class Ui(IGarageHandler garageHandler, TextReader input, TextWriter outpu
             new MenuAction("Search for a vehicle", Search),
             new MenuAction("Look up a vehicle by registration number", FindByRegistrationNumber),
             new MenuAction("Fill the garage with default vehicles", FillWithDefaultVehicles),
+            new MenuAction("Save the garage to disk", SaveToDisk),
+            new MenuAction("Load the garage from disk", LoadFromDisk),
             new MenuAction("Quit", () => exit = true)
         );
 
@@ -264,6 +266,37 @@ public class Ui(IGarageHandler garageHandler, TextReader input, TextWriter outpu
         if (allOk)
         {
             output.WriteLine("Done!");
+        }
+    }
+
+    private static string SaveFile =>
+        Path.Combine(
+            Path.GetDirectoryName(Environment.ProcessPath) ?? Environment.CurrentDirectory,
+            "garage.json");
+
+    private void SaveToDisk()
+    {
+        try
+        {
+            garageHandler.SaveToDisk(SaveFile);
+            output.WriteLine($"Saved to '{SaveFile}'!");
+        }
+        catch (IOException e)
+        {
+            output.WriteLine($"Couldn't save garage: {e.Message}");
+        }
+    }
+
+    private void LoadFromDisk()
+    {
+        try
+        {
+            garageHandler.LoadFromDisk(SaveFile);
+            output.WriteLine($"Loaded from '{SaveFile}'!");
+        }
+        catch (IOException e)
+        {
+            output.WriteLine($"Couldn't load garage: {e.Message}");
         }
     }
 }
