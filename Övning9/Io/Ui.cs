@@ -108,25 +108,35 @@ public class Ui(IGarageHandler garageHandler, TextReader input, TextWriter outpu
             }),
             new MenuAction("Boat", () =>
             {
-                var cylinderVolumeCc = _inputReader.PromptPositiveInt("Enter cylinder volume (cm³)");
+                var cylinderVolumeCc =
+                    _inputReader.PromptPositiveInt("Enter cylinder volume (cm³)");
                 vehicle = new Boat(registrationNumber, color, cylinderVolumeCc);
             })
         );
         menu.Run();
 
+        if (TryAddVehicle(vehicle!))
+        {
+            output.WriteLine("Done!");
+        }
+    }
+
+    private bool TryAddVehicle(Vehicle vehicle)
+    {
         try
         {
-            // TODO: error handling
             garageHandler.AddVehicle(vehicle!);
-            output.WriteLine("Done!");
+            return true;
         }
         catch (GarageIsFullException e)
         {
-            output.WriteLine($"Couldn't add the vehicle: {e.Message}");
+            output.WriteLine($"Couldn't add vehicle: {e.Message}");
+            return false;
         }
         catch (RegistrationNumberNotUniqueException e)
         {
-            output.WriteLine($"Couldn't add the vehicle: {e.Message}");
+            output.WriteLine($"Couldn't add vehicle: {e.Message}");
+            return false;
         }
     }
 
@@ -240,7 +250,20 @@ public class Ui(IGarageHandler garageHandler, TextReader input, TextWriter outpu
 
     private void FillWithDefaultVehicles()
     {
-        // TODO: error handling
-        garageHandler.FillWithDefaultVehicles();
+        List<Vehicle> vehicles =
+        [
+            new Car(new VehicleNumber("ABC123"), Color.Red, 120),
+            new Car(new VehicleNumber("DEF45X"), Color.Blue, 200),
+            new Motorcycle(new VehicleNumber("XYZ789"), Color.Black, 220),
+            new Airplane(new VehicleNumber("AIR100"), Color.White, 2),
+            new Boat(new VehicleNumber("SEA321"), Color.Blue, 1000),
+            new Bus(new VehicleNumber("BUS111"), Color.Yellow, 40)
+        ];
+
+        var allOk = vehicles.Aggregate(true, (ok, v) => ok & TryAddVehicle(v));
+        if (allOk)
+        {
+            output.WriteLine("Done!");
+        }
     }
 }

@@ -12,5 +12,4 @@ public interface IGarageHandler
     IEnumerable<Vehicle> GetAllVehicles();
     IEnumerable<Vehicle> FindWithFilters(IReadOnlyCollection<SearchFilter> filters);
     Vehicle? FindByRegistrationNumber(VehicleNumber registrationNumber);
-    void FillWithDefaultVehicles();
 }
