@@ -1,4 +1,4 @@
-namespace Övning9.Ui;
+namespace Övning9.Io;
 
 public class MenuAction(string? description, Action action)
 {
