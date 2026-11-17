@@ -1,0 +1,11 @@
+@StorageApi_HostAddress = http://localhost:5223
+
+GET {{StorageApi_HostAddress}}/openapi/v1.json
+Accept: application/json
+
+###
+
+GET {{StorageApi_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
