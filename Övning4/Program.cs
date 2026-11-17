@@ -1,10 +1,10 @@
 ﻿using Övning4;
 
-var lines = int.Parse(Console.ReadLine());
+var lines = int.Parse(Console.ReadLine()!);
 var persons = new List<Person>();
 for (int i = 0; i < lines; i++)
 {
-    var cmdArgs = Console.ReadLine().Split();
+    var cmdArgs = Console.ReadLine()!.Split();
 
     try
     {
@@ -21,6 +21,6 @@ for (int i = 0; i < lines; i++)
     }
 }
 
-var bonus = decimal.Parse(Console.ReadLine());
+var bonus = decimal.Parse(Console.ReadLine()!);
 persons.ForEach(p => p.IncreaseSalary(bonus));
 persons.ForEach(p => Console.WriteLine(p.ToString()));
