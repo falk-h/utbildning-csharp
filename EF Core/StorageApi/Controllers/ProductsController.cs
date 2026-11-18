@@ -89,4 +89,25 @@ public class ProductsController(StorageContext context) : ControllerBase
             _ => throw new UnreachableException(),
         };
     }
+
+    // GET: api/Products/stats
+    [HttpGet("stats")]
+    public async Task<StatsDto> GetStats() {
+        var results = await context.Product
+            .GroupBy(_ => 1) // Hack to make EF call multiple aggregate functions in a single query
+            .Select(
+                group => new {
+                    ProductCount = group.Count(),
+                    TotalValue = group.Sum(p => p.Count * p.Price),
+                    AveragePrice = group.Average(p => (decimal)p.Price),
+                }
+            )
+            .FirstOrDefaultAsync();
+
+        return new StatsDto {
+            ProductCount = results?.ProductCount ?? 0,
+            TotalValue = results?.TotalValue ?? 0,
+            AveragePrice = results?.AveragePrice,
+        };
+    }
 }
