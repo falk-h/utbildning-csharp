@@ -3,7 +3,9 @@ using StorageApi.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<StorageContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("StorageContext") ?? throw new InvalidOperationException("Connection string 'StorageContext' not found.")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("StorageContext") ??
+                         throw new InvalidOperationException(
+                             "Connection string 'StorageContext' not found.")));
 
 // Add services to the container.
 
@@ -22,6 +24,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseSwaggerUI(options => options.SwaggerEndpoint("/openapi/v1.json", "Storage API v1"));
 
 app.MapControllers();
 
