@@ -1,11 +1,53 @@
 @StorageApi_HostAddress = http://localhost:5223
 
+# @name OpenAPI schema
 GET {{StorageApi_HostAddress}}/openapi/v1.json
 Accept: application/json
 
 ###
 
-GET {{StorageApi_HostAddress}}/weatherforecast/
-Accept: application/json
+# @name Single product
+GET {{StorageApi_HostAddress}}/api/Products/2
+
+###
+
+# @name All products
+GET {{StorageApi_HostAddress}}/api/Products
+
+###
+# @name Create test product
+POST {{StorageApi_HostAddress}}/api/products
+Content-Type: application/json
+
+{
+  "name": "TestProduct",
+  "price": 123,
+  "category": "TestCategory",
+  "shelf": "TestShelf",
+  "count": 0,
+  "description": "TestDescription"
+}
+
+###
+
+@id = 1008
+
+# @name Modify product
+PUT {{StorageApi_HostAddress}}/api/Products/{{id}}
+Content-Type: application/json
+
+{
+  "name": "Product",
+  "price": 123,
+  "category": "NewCategory",
+  "shelf": "TestShelf",
+  "count": 0,
+  "description": "TestDescription"
+}
+
+###
+
+# @name Delete product
+DELETE {{StorageApi_HostAddress}}/api/Products/{{id}}
 
 ###

@@ -1,6 +1,8 @@
+using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using StorageApi.Data;
+using StorageApi.DTOs;
 using StorageApi.Models;
 
 namespace StorageApi.Controllers;
@@ -11,59 +13,64 @@ public class ProductsController(StorageContext context) : ControllerBase
 {
     // GET: api/Products
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<Product>>> GetProduct()
-    {
-        return await context.Product.ToListAsync();
-    }
+    public IAsyncEnumerable<Product> GetProduct() =>
+        context.Product.AsNoTracking().AsAsyncEnumerable();
 
     // GET: api/Products/5
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<Product>> GetProduct(int id)
+    public async Task<ActionResult<ProductDto>> GetProduct(int id)
     {
-        var product = await context.Product.FindAsync(id);
+        var product = await context.Product.AsNoTracking()
+            .Where(p => p.Id == id)
+            .SingleOrDefaultAsync();
 
-        if (product == null)
-        {
-            return NotFound();
-        }
-
-        return product;
+        return product == null
+            ? NotFound()
+            : new ProductDto
+            {
+                Id = product.Id,
+                Name = product.Name,
+                Price = product.Price,
+                Count = product.Count
+            };
     }
 
     // PUT: api/Products/5
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutProduct(int id, Product product)
+    public async Task<IActionResult> PutProduct(int id, CreateProductDto productDto)
     {
-        if (id != product.Id)
-        {
-            return BadRequest();
-        }
-
-        context.Entry(product).State = EntityState.Modified;
-
-        try
-        {
-            await context.SaveChangesAsync();
-        }
-        catch (DbUpdateConcurrencyException)
-        {
-            if (!ProductExists(id))
+        var rowsAffected = await context.Product
+            .Where(p => p.Id == id)
+            .ExecuteUpdateAsync(setter =>
             {
-                return NotFound();
-            }
-
-            throw;
-        }
-
-        return NoContent();
+                setter.SetProperty(p => p.Name, productDto.Name);
+                setter.SetProperty(p => p.Price, productDto.Price);
+                setter.SetProperty(p => p.Category, productDto.Category);
+                setter.SetProperty(p => p.Shelf, productDto.Shelf);
+                setter.SetProperty(p => p.Count, productDto.Count);
+                setter.SetProperty(p => p.Description, productDto.Description);
+            });
+        return rowsAffected switch
+        {
+            0 => NotFound(),
+            1 => NoContent(),
+            _ => throw new UnreachableException(),
+        };
     }
 
     // POST: api/Products
-    // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
     [HttpPost]
-    public async Task<ActionResult<Product>> PostProduct(Product product)
+    public async Task<ActionResult<ProductDto>> PostProduct(CreateProductDto productDto)
     {
+        var product = new Product
+        {
+            Name = productDto.Name,
+            Price = productDto.Price,
+            Category = productDto.Category,
+            Shelf = productDto.Shelf,
+            Count = productDto.Count,
+            Description = productDto.Description,
+        };
         context.Product.Add(product);
         await context.SaveChangesAsync();
 
@@ -74,20 +81,12 @@ public class ProductsController(StorageContext context) : ControllerBase
     [HttpDelete("{id:int}")]
     public async Task<IActionResult> DeleteProduct(int id)
     {
-        var product = await context.Product.FindAsync(id);
-        if (product == null)
+        var rowsAffected = await context.Product.Where(p => p.Id == id).ExecuteDeleteAsync();
+        return rowsAffected switch
         {
-            return NotFound();
-        }
-
-        context.Product.Remove(product);
-        await context.SaveChangesAsync();
-
-        return NoContent();
-    }
-
-    private bool ProductExists(int id)
-    {
-        return context.Product.Any(e => e.Id == id);
+            0 => NotFound(),
+            1 => NoContent(),
+            _ => throw new UnreachableException(),
+        };
     }
 }
