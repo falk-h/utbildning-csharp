@@ -24,5 +24,7 @@ public class ProductConfiguration: IEntityTypeConfiguration<Product> {
                 b.HasCheckConstraint("CK_Price_Nonnegative", "Price >= 0");
             }
         );
+        builder.Property(p => p.Name).UseCollation("SQL_Latin1_General_CP1_CI_AS");
+        builder.Property(p => p.Category).UseCollation("SQL_Latin1_General_CP1_CI_AS");
     }
 }

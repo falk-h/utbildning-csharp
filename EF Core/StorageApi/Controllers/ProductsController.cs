@@ -12,8 +12,20 @@ namespace StorageApi.Controllers;
 public class ProductsController(StorageContext context): ControllerBase {
     // GET: api/Products
     [HttpGet]
-    public IAsyncEnumerable<Product> GetProduct() =>
-        context.Product.AsNoTracking().AsAsyncEnumerable();
+    public IAsyncEnumerable<Product> GetProduct(string? searchQuery = "") {
+        var query = context.Product.AsNoTracking();
+
+        if (searchQuery is null) {
+            return query.AsAsyncEnumerable();
+        }
+
+        var escaped = searchQuery.Replace("[", "[[]").Replace("_", "[_]").Replace("%", "[%]");
+        var pattern = $"%{escaped}%";
+        return query.Where(
+                p => EF.Functions.Like(p.Name, pattern) || EF.Functions.Like(p.Category, pattern)
+            )
+            .AsAsyncEnumerable();
+    }
 
     // GET: api/Products/5
     [HttpGet("{id:int}")]
@@ -81,7 +93,7 @@ public class ProductsController(StorageContext context): ControllerBase {
     // GET: api/Products/stats
     [HttpGet("stats")]
     public async Task<StatsDto> GetStats() {
-        var results = await context.Product
+        var results = await context.Product.AsNoTracking()
             .GroupBy(_ => 1) // Hack to make EF call multiple aggregate functions in a single query
             .Select(
                 group => new {

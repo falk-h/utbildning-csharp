@@ -15,6 +15,11 @@ GET {{StorageApi_HostAddress}}/api/Products/2
 GET {{StorageApi_HostAddress}}/api/Products
 
 ###
+
+# @name Search
+GET {{StorageApi_HostAddress}}/api/Products?searchQuery=fastener
+
+###
 # @name Create test product
 POST {{StorageApi_HostAddress}}/api/products
 Content-Type: application/json

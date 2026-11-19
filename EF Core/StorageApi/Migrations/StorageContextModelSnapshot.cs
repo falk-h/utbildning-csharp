@@ -32,7 +32,8 @@ namespace StorageApi.Migrations
                     b.Property<string>("Category")
                         .IsRequired()
                         .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasColumnType("nvarchar(512)")
+                        .UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
                     b.Property<int>("Count")
                         .HasColumnType("int");
@@ -45,7 +46,8 @@ namespace StorageApi.Migrations
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(512)
-                        .HasColumnType("nvarchar(512)");
+                        .HasColumnType("nvarchar(512)")
+                        .UseCollation("SQL_Latin1_General_CP1_CI_AS");
 
                     b.Property<int>("Price")
                         .HasColumnType("int");
@@ -57,7 +59,7 @@ namespace StorageApi.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Product", null, t =>
+                    b.ToTable("Product", t =>
                         {
                             t.HasCheckConstraint("CK_Count_Nonnegative", "Count >= 0");
 
