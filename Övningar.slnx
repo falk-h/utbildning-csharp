@@ -1,12 +1,12 @@
 <Solution>
-  <Project Path="EF Core/StorageApi/StorageApi.csproj" />
-  <Project Path="Övning1/Övning1.csproj" />
-  <Project Path="Övning2/Övning2.csproj" />
-  <Project Path="Övning4/Övning4.csproj" />
-  <Project Path="Övning5/Övning5.csproj" />
-  <Project Path="Övning6/Övning6.csproj" />
-  <Project Path="Övning7/Övning7.csproj" />
-  <Project Path="Övning8/Övning8.csproj" />
-  <Project Path="Övning9.Tests/Övning9.Tests.csproj" />
-  <Project Path="Övning9/Övning9.csproj" />
+    <Project Path="EF Core/StorageApi/StorageApi.csproj"/>
+    <Project Path="Övning1/Övning1.csproj"/>
+    <Project Path="Övning2/Övning2.csproj"/>
+    <Project Path="Övning4/Övning4.csproj"/>
+    <Project Path="Övning5/Övning5.csproj"/>
+    <Project Path="Övning6/Övning6.csproj"/>
+    <Project Path="Övning7/Övning7.csproj"/>
+    <Project Path="Övning8/Övning8.csproj"/>
+    <Project Path="Övning9.Tests/Övning9.Tests.csproj"/>
+    <Project Path="Övning9/Övning9.csproj"/>
 </Solution>

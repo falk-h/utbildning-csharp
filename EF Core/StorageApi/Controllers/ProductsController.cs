@@ -9,8 +9,7 @@ namespace StorageApi.Controllers;
 
 [Route("api/[controller]")]
 [ApiController]
-public class ProductsController(StorageContext context) : ControllerBase
-{
+public class ProductsController(StorageContext context): ControllerBase {
     // GET: api/Products
     [HttpGet]
     public IAsyncEnumerable<Product> GetProduct() =>
@@ -18,40 +17,33 @@ public class ProductsController(StorageContext context) : ControllerBase
 
     // GET: api/Products/5
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<ProductDto>> GetProduct(int id)
-    {
+    public async Task<ActionResult<ProductDto>> GetProduct(int id) {
         var product = await context.Product.AsNoTracking()
             .Where(p => p.Id == id)
             .SingleOrDefaultAsync();
 
         return product == null
             ? NotFound()
-            : new ProductDto
-            {
-                Id = product.Id,
-                Name = product.Name,
-                Price = product.Price,
-                Count = product.Count
+            : new ProductDto {
+                Id = product.Id, Name = product.Name, Price = product.Price, Count = product.Count,
             };
     }
 
     // PUT: api/Products/5
     [HttpPut("{id:int}")]
-    public async Task<IActionResult> PutProduct(int id, CreateProductDto productDto)
-    {
-        var rowsAffected = await context.Product
-            .Where(p => p.Id == id)
-            .ExecuteUpdateAsync(setter =>
-            {
-                setter.SetProperty(p => p.Name, productDto.Name);
-                setter.SetProperty(p => p.Price, productDto.Price);
-                setter.SetProperty(p => p.Category, productDto.Category);
-                setter.SetProperty(p => p.Shelf, productDto.Shelf);
-                setter.SetProperty(p => p.Count, productDto.Count);
-                setter.SetProperty(p => p.Description, productDto.Description);
-            });
-        return rowsAffected switch
-        {
+    public async Task<IActionResult> PutProduct(int id, CreateProductDto productDto) {
+        var rowsAffected = await context.Product.Where(p => p.Id == id)
+            .ExecuteUpdateAsync(
+                setter => {
+                    setter.SetProperty(p => p.Name, productDto.Name);
+                    setter.SetProperty(p => p.Price, productDto.Price);
+                    setter.SetProperty(p => p.Category, productDto.Category);
+                    setter.SetProperty(p => p.Shelf, productDto.Shelf);
+                    setter.SetProperty(p => p.Count, productDto.Count);
+                    setter.SetProperty(p => p.Description, productDto.Description);
+                }
+            );
+        return rowsAffected switch {
             0 => NotFound(),
             1 => NoContent(),
             _ => throw new UnreachableException(),
@@ -60,10 +52,8 @@ public class ProductsController(StorageContext context) : ControllerBase
 
     // POST: api/Products
     [HttpPost]
-    public async Task<ActionResult<ProductDto>> PostProduct(CreateProductDto productDto)
-    {
-        var product = new Product
-        {
+    public async Task<ActionResult<ProductDto>> PostProduct(CreateProductDto productDto) {
+        var product = new Product {
             Name = productDto.Name,
             Price = productDto.Price,
             Category = productDto.Category,
@@ -79,11 +69,9 @@ public class ProductsController(StorageContext context) : ControllerBase
 
     // DELETE: api/Products/5
     [HttpDelete("{id:int}")]
-    public async Task<IActionResult> DeleteProduct(int id)
-    {
+    public async Task<IActionResult> DeleteProduct(int id) {
         var rowsAffected = await context.Product.Where(p => p.Id == id).ExecuteDeleteAsync();
-        return rowsAffected switch
-        {
+        return rowsAffected switch {
             0 => NotFound(),
             1 => NoContent(),
             _ => throw new UnreachableException(),
